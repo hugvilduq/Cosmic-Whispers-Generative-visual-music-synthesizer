@@ -1,0 +1,43 @@
+// TOFIX:
+---------------------------------------------------
+
+// Menu clicks should not count as canvas clicks
+
+// Changing the scale should also change the notes in canvas
+
+
+// TODO
+---------------------------------------------
+// Make orbits out of 16, instead of 8
+
+// Choose notes for the dots (toolbar/piano/numbers?)
+
+// Offset for the generators. They should have their beats when the user creates
+//  them, not dictated by the current state of the Metronome
+
+//Improve animations:
+  //Make orbit animations more fluid
+  // Improve planets animation when played. More flashy
+
+// Add different Octave generators, for bass, chords and melody
+// In the toolbar, all notes should be available to choose from,
+  //  with an envelope control options (ATT,SUS,DEC,REL), graphically for ALL notes at once
+  // Another section of the toolbar for drum kits (asteroids), each drum sound has its own synth control  
+
+// Add differen types of celestial bodies:
+// Asteroids for drumkit
+  // Asteroid for drums, meteorite for cymbals. (see google: meteoroids)
+// Comet particles for theremin
+// Black hole: LPF
+// white hole: HPF
+// wormhole, supernova, nebula, 
+
+// Separarate files into modules
+
+// Make the dots move around the center of the galaxy (metronome?)
+
+// Consult with client
+// Keyboard controls?
+  // Spacebar for generator, number for whiteDots, theremin always active on click
+
+Add a dynamic background that reacts according to the amount of music created.
