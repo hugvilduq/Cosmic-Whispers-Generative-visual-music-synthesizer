@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tone Synth App</title>
+  <script src="../lib/p5/p5.min.js"></script>
+  <script src="../lib/tone/Tone.min.js"></script>
+  <script src="../lib/datgui/dat.gui.min.js"></script>
+  <script src="synth.js"></script>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .play-button {
+    background-color: #2A9D8F;
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 24px;
+    border-radius: 5px;
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.3s;
+  }
+
+  .play-button:hover {
+    background-color: #48B9A6;
+  }
+
+  .slider-label {
+    font-family: monospace;
+    font-size: 16px;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-align: center;
+    position: absolute;
+    transform: translate(150%,-300%);
+  
+  }
+
+    .custom-slider {
+      transform: rotate(270deg);
+      width: 100px;
+    }
+
+    .custom-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 5px;
+      border-radius: 20%; 
+      height: 55px;
+      background: #04AA6D;
+      cursor: pointer;
+    }
+
+    .custom-slider::-webkit-slider-runnable-track {
+      background-color: #000000;
+      border: 2px solid #1D6F67;
+      border-radius: 5px;
+      position: relative;
+    }
+    .custom-select{
+      font-family: monospace;
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      /* text-align: center; */
+      position: absolute;
+      background-color: #000000;
+      border: 2px solid #1D6F67;
+      border-radius: 5px;
+      position: relative;
+    }
+  </style>
+
+</head>
+
+<body>
+</body>
+
+</html>

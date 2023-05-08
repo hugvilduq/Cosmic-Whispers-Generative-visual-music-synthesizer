@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <title>CosmicWhispers</title>
-  <script src="./lib/p5/p5.min.js"></script>
-  <script src="./lib/tone/Tone.min.js"></script>
-  <script src="./lib/datgui/dat.gui.min.js"></script>
+  <script src="../lib/p5/p5.min.js"></script>
+  <script src="../lib/tone/Tone.min.js"></script>
+  <script src="../lib/datgui/dat.gui.min.js"></script>
 
   <style>
     /* Set canvas to cover the entire browser window */
@@ -23,17 +23,6 @@
       display: block;
     }
 
-    #mute-button {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      background-color: #fff;
-      border: none;
-      padding: 10px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
     #gui-container {
       position: absolute;
       top: 20px;
@@ -42,11 +31,29 @@
 
     #toolbar {
       position: absolute;
-      top: 60px;
-      left: 40px;
       transform: rotate(90deg);
-      transform-origin: 0 0;
+      transform-origin: top left;
+      /* New: Set rotation pivot point to top-left corner */
+      top: 50px;
+      /* Updated: Set top position */
+      left: 80px;
+      /* Updated: Set left position */
+      background-color: rgba(255, 255, 255, 0.7);
+      /* Semi-transparent white background */
+      border-radius: 5px;
+      /* Rounded corners */
+      padding: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+      /* Drop shadow */
+
+      display: flex;
+      /* Use flexbox layout */
+      flex-direction: row;
+      /* Lay out buttons in a row */
+      flex-wrap: nowrap;
+      /* Prevent buttons from wrapping */
     }
+
 
     #toolbar button {
       font-size: 16px;
@@ -62,6 +69,7 @@
       cursor: pointer;
     }
 
+
     #toolbar button.active {
       background-color: #333;
       color: #fff;
@@ -70,18 +78,49 @@
     #toolbar button:not(.active):hover {
       background-color: #ddd;
     }
+
+    #synth-iframe {
+      position: absolute;
+      bottom: 15%;
+      right: 0%;
+      transition: left 2.5s ease;
+      border: 1px solid silver;
+      opacity: 80%;
+
+    }
+    
+    #collapse-btn{
+      position: absolute;
+      bottom: 15%;
+      right: 0%;
+      transition: left 2.5s ease;
+    }
+    
+    .collapsed {
+      transition: left 2.5s ease;
+      left: -100%;
+    }
   </style>
 </head>
 
 <body>
 
-  <button id="mute-button">Mute</button>
-  <!-- Include your JavaScript files -->
-  <script src="main.js"></script>
   <div id="toolbar">
-    <button id="create-button">Create</button>
+    <button id="mute-button">Mute</button>
+    <button id="create-button">Notes</button>
     <button id="theremin-button">Theremin</button>
   </div>
+  <iframe id="synth-iframe" src="synth.html" width="600" height="400" frameborder="0"></iframe>
+  <button id="collapse-btn">Collapse</button>
+  
+  <!-- JS scripts here -->
+  <script src="main.js"></script>
+  <script src="synthControl.js"></script>
+  <script src="retrowave.js"></script>
+  <script src="whiteDot.js"></script>
+  <script src="gui.js"></script>
+  <script src="octaveGenerator.js"></script>
+</div>
 
 </body>
 

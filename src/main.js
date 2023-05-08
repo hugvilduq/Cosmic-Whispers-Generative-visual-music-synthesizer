@@ -1,8 +1,8 @@
 
 let backgroundImage;
-
+let activeSynth;
 function preload() {
-  backgroundImage = loadImage('space-bg.jpg');
+  backgroundImage = loadImage('../space-bg.jpg');
 }
 
 
@@ -15,8 +15,10 @@ document.addEventListener("mousedown", function () {
 document.addEventListener("mouseup", function () {
   isMouseDown = false;
 });
-let synth;
-const root = 48;
+
+
+let thereminSynth;
+const root = 60;
 
 const compressor = new Tone.Compressor({
   attack: 0.003,  // In seconds, time taken to reduce gain after signal exceeds the threshold
@@ -47,12 +49,8 @@ const highpassFilter = new Tone.Filter({
 
 const echo = new Tone.FeedbackDelay('8n', 0.5).toDestination(); // '8n' = 1/8 note delay time, 0.5 = 50% feedback
 
-// const volume = new Tone.Volume({
-//   volume: -30, // Initial volume in decibels (dB)
-//   mute: false // Set to true to mute the output
-// }).toDestination();
 
-const polySynth = new Tone.PolySynth(Tone.Synth, {
+let polySynth = new Tone.PolySynth(Tone.Synth, {
   oscillator: {
     type: 'sine', //'sine', 'square', 'triangle','sawtooth'
   },
@@ -62,7 +60,7 @@ const polySynth = new Tone.PolySynth(Tone.Synth, {
     sustain: 0.3,
     release: 1,
   },
-  volume: -24,
+  volume: -12,
   voiceSteal: true, //prioritise new notes when max polyphony
 
 }).toDestination();
@@ -102,35 +100,39 @@ polySynth
 
 
 
-function setup() {
-  createCanvas(windowWidth, windowHeight);
-  background(0);
-
   // create synth and scale objects from Tone.js
-  synth = new Tone.Synth({
+  thereminSynth = new Tone.Synth({
     oscillator: {
       type: "sine", // Use a sawtooth wave for the oscillator
       detune: 10, // Detune the oscillator slightly for a richer sound
     },
     envelope: {
-      attack: 0.5, // Increase the attack time for a softer attack
+      attack: 0.2, // Increase the attack time for a softer attack
       decay: 0.2, // Decrease the decay time for a sharper decay
       sustain: 0.5, // Decrease the sustain level for a shorter sustain
       release: 15, // Increase the release time for a longer fade out
     },
     volume: -16,
   }).toDestination();
-  const echo = new Tone.FeedbackDelay('8n', 0.25).toDestination(); // '8n' = 1/8 note delay time, 0.5 = 50% feedback
-  synth
-    .connect(echo);
+
+  const thereminEcho = new Tone.FeedbackDelay('8n', 0.25).toDestination(); // '8n' = 1/8 note delay time, 0.5 = 50% feedback
+
+  thereminSynth
+    .connect(thereminEcho);
+
+
+
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  setupBackground();
+  background(0);
 
   // Echo
   // const delay = new Tone.FeedbackDelay("1n", 0.25).toDestination();
   // synth.connect(delay);
 
   // scale = Tone.Frequency("C2").harmonize([0, 2, 3, 7, 9], "m7");
-
-  document.getElementById("mute-button").addEventListener("click", toggleMute);
 
 
   // set up Tone.js Transport to play a 4-beat pattern
@@ -149,8 +151,43 @@ function setup() {
 
 }
 
+
 let beatNum;
 let currentEighthNote;
+// Default settings
+const settings = {
+  scale: "Mongolian",
+  speed: 1,
+  lockNodes: true,
+  octaveOffset: 0
+
+};
+
+const iframe = document.getElementById('synth-iframe');
+const button = document.getElementById('collapse-btn');
+
+button.addEventListener('click', () => {
+  iframe.classList.toggle('collapsed');
+});
+
+const scales = {
+  Major: [0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23],
+  Natural_Minor: [0, 2, 3, 5, 7, 8, 10, 12, 14, 15, 17, 19, 20, 22],
+  Harmonic_Minor: [0, 2, 3, 5, 7, 8, 11, 12, 14, 15, 17, 19, 20, 23],
+  Melodic_Minor: [0, 2, 3, 5, 7, 9, 11, 12, 14, 15, 17, 19, 21, 23],
+  Mixolydian: [0, 2, 4, 5, 7, 9, 10, 12, 14, 16, 17, 19, 21, 22],
+  Phrygian: [0, 1, 3, 5, 7, 8, 10, 12, 13, 15, 17, 19, 20, 22],
+  Lydian: [0, 2, 4, 6, 7, 9, 11, 12, 14, 16, 18, 19, 21, 23],
+  Locrian: [0, 1, 3, 5, 6, 8, 10, 12, 13, 15, 17, 18, 20, 22],
+  Mongolian: [0, 2, 5, 7, 9, 12, 14, 17, 19, 21, 24, 26, 29, 31],
+  Pentatonic_Major: [0, 2, 4, 7, 9, 12, 14, 16, 19, 21, 24, 26, 28, 31],
+  Pentatonic_Minor: [0, 3, 5, 7, 10, 12, 15, 17, 19, 22, 24, 27, 29, 31],
+  Overtone: [0, 4, 7, 10, 12, 14, 16, 19, 22, 24, 26, 28, 31, 34, 36, 38, 40, 43, 46, 48, 50],
+  Blues: [0, 3, 5, 6, 7, 10, 12, 15, 17, 18, 19, 22, 24, 27],
+  Chromatic: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
+  Whole_Tone: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30],
+};
+
 
 function getEigthNoteIndex(positionArray) {
   const bar = parseInt(positionArray[0]) * 8;
@@ -158,14 +195,12 @@ function getEigthNoteIndex(positionArray) {
   const sixteenthNote = parseInt(positionArray[2]) >= 2 ? 1 : 0;
   return (bar + beat + sixteenthNote) % 8;
 }
+
 function onBeat(time) {
-  
+
   let currentPosition = Tone.Transport.position.split(":");
-  let currentBeat = parseInt(currentPosition[1]);
-  
-  
   let playingNotes = new Set();
-  
+
   currentEighthNote = getEigthNoteIndex(currentPosition)
   // Loop through each octave generator
   for (const generator of octaveGenerators) {
@@ -173,17 +208,22 @@ function onBeat(time) {
     for (const whiteDot of generator.whiteDots) {
       if (whiteDot.beatsToPlay[currentEighthNote]) {
         whiteDot.soundPlayed();
-        polySynth.triggerAttackRelease(whiteDot.scaleNote, "16n", time);
         whiteDot.beatsToPlay = new Array(8).fill(false);
-        
+
+        // Calculate the note with the octave offset
+        const noteWithOffset = Tone.Frequency(whiteDot.scaleNote).transpose(12 * generator.octaveOffset).toNote();
+
+        // Create a unique key for the playingNotes set
+        const noteKey = `${whiteDot.noteIndex}_${generator.octaveOffset}`;
+
         // Check if the note is already playing
-        if (!playingNotes.has(whiteDot.noteIndex)) {
+        if (!playingNotes.has(noteKey)) {
           // Add the note to the playingNotes set
-          playingNotes.add(whiteDot.noteIndex);
+          playingNotes.add(noteKey);
 
           // Trigger the note and remove it from the playingNotes set when the note is released
-          polySynth.triggerAttackRelease(whiteDot.scaleNote, "16n", time, undefined, () => {
-            playingNotes.delete(whiteDot.noteIndex);
+          polySynth.triggerAttackRelease(noteWithOffset, "16n", time, undefined, () => {
+            playingNotes.delete(noteKey);
           });
 
         }
@@ -193,15 +233,41 @@ function onBeat(time) {
 }
 
 
+
+
 let isThereminPlaying = false;
 let thereminNote = null;
 
 
+
+
+
+
+let currentScale = scales[settings.scale]
+const rootNote = "C4";
+const rootFrequency = Tone.Frequency(rootNote).toFrequency();
+const scaleNotes = currentScale.map(interval => {
+  const frequency = rootFrequency * Math.pow(2, interval / 12);
+  return Tone.Frequency(frequency).toNote();
+});
+const numRegions = scaleNotes.length;
+
+
+
 function draw() {
   image(backgroundImage, 0, 0, width, height);
+  drawBackground();
+
+  numDots = whiteDots.length;
+  maxDots = 75;
+
+  backgroundSpeed = 10;
+  updateBackgroundSpeed();
 
   background(0, 50);
   drawMetronome();
+
+
   for (let whiteDot of whiteDots) {
     whiteDot.update();
     whiteDot.display();
@@ -229,33 +295,38 @@ function draw() {
   }
 
 
+
+  let currentNote;
+  let isPlaying = false;
+
   let currentScale = scales[settings.scale]
-  const rootNote = "C4";
-  const rootFrequency = Tone.Frequency(rootNote).toFrequency();
   const scaleNotes = currentScale.map(interval => {
     const frequency = rootFrequency * Math.pow(2, interval / 12);
     return Tone.Frequency(frequency).toNote();
   });
   const numRegions = scaleNotes.length;
+
   const regionWidth = width / numRegions;
-  let currentNote;
-  let isPlaying = false;
-
-
   // Draw gridlines for theremin
   stroke(100);
   for (let i = 1; i < numRegions; i++) {
     line(regionWidth * i, 0, regionWidth * i, height);
   }
 
+
   // Theremin mode
   if (interactionMode === "theremin") {
+    activeSynth=thereminSynth;
+
     // Draw a vertical line at the cursor position
     stroke(200);
     line(mouseX, 0, mouseX, height);
 
     // Map the mouse position to a note in the Pentatonic scale based on the region
     const regionIndex = floor(mouseX / regionWidth);
+    // Higher mouse y=> Higher volume
+    let volume = map(mouseY, height, 0, -48, 0);
+
     const note = scaleNotes[regionIndex];
     const frequency = Tone.Frequency(note).toFrequency();
 
@@ -263,25 +334,68 @@ function draw() {
     currentNote = frequency;
     // Update synth frequency and trigger attack/release based on mouse state
     if (mouseIsPressed) {
-      synth.triggerAttackRelease(currentNote);
+      thereminSynth.triggerAttackRelease(currentNote);
+      thereminSynth.volume.value = volume;
       isPlaying = true;
     } else {
-      synth.triggerRelease(Tone.now());
+      thereminSynth.triggerRelease(Tone.now());
       isPlaying = false;
     }
-  }else{
-      synth.triggerRelease(Tone.now());
+  } else { // interactionMode == Create
+    activeSynth=polySynth;
+    drawOctaveOffsetToolbar();
+    drawScaleToolbar();
+    thereminSynth.triggerRelease(Tone.now());
   }
+
+  
 }
 
+    // Get a reference to the iframe
+    const activeSynthData = {
+      type: 'thereminSynth',
+      options: thereminSynth.get()
+    };
+    console.log(activeSynth)
 
+  window.addEventListener('message', (event) => {
+    const data = event.data;
+  
+    if (data.type === 'updatedSynth') {
+      activeSynth.volume.value = data.options.volume;
+      activeSynth.oscillator.type = data.options.oscillatorType;
+      activeSynth.envelope.attack = data.options.envelope.attack;
+      activeSynth.envelope.decay = data.options.envelope.decay;
+      activeSynth.envelope.sustain = data.options.envelope.sustain;
+      activeSynth.envelope.release = data.options.envelope.release;
+    }
+  });
 
+const synthIframe = document.getElementById('synth-iframe');
 
+// Wait for the iframe content to load
+synthIframe.addEventListener('load', () => {
+  // Send the activeSynthData object as a message to the iframe
+  synthIframe.contentWindow.postMessage(activeSynthData, '*');
+});
 
 
 // array to store white dots
 let whiteDots = [];
 let octaveGenerators = [];
+
+
+// backgroundSpeed = map(numDots, 0, maxDots, 0.1, 10);
+
+function updateBackgroundSpeed() {
+  backgroundSpeed = map(numDots, 0, maxDots, 0.1, 10); // Update the speed variable based on the number of dots
+  // flattenPerspective = backgroundSpeed * 100 + 50;
+  // spaceMargin = (backgroundSpeed) * (-15) + 170;
+  // spacing = backgroundSpeed * 2 + 20;
+}
+
+
+
 
 
 function mouseClicked() {
@@ -290,379 +404,51 @@ function mouseClicked() {
       const newOctaveGenerator = new OctaveGenerator(mouseX, mouseY);
       octaveGenerators.push(newOctaveGenerator);
     } else {
-      if (isMuteButtonClicked(mouseX, mouseY)) {
-        toggleMute();
+      // Check if user clicks a dot
+      let clickedDotIndex = -1;
+      handleToolbarClick();
+      handleOctaveOffsetToolbarClick();
+
+
+      for (let i = 0; i < whiteDots.length; i++) {
+        if (dist(mouseX, mouseY, whiteDots[i].x, whiteDots[i].y) <= whiteDots[i].size / 2) {
+          clickedDotIndex = i;
+          break;
+        }
+      }
+      // If user clicks a dot, remove it
+      if (clickedDotIndex >= 0) {
+        whiteDots.splice(clickedDotIndex, 1);
       } else {
-        let clickedDotIndex = -1;
-        for (let i = 0; i < whiteDots.length; i++) {
-          if (dist(mouseX, mouseY, whiteDots[i].x, whiteDots[i].y) <= whiteDots[i].size / 2) {
-            clickedDotIndex = i;
-            break;
-          }
-        }
-        if (clickedDotIndex >= 0) {
-          whiteDots.splice(clickedDotIndex, 1);
-        } else {
-          whiteDots.push(new WhiteDot(mouseX, mouseY));
-        }
+        whiteDots.push(new WhiteDot(mouseX, mouseY, selectedNoteIndex));
       }
     }
   }
 }
 
-
-function isMuteButtonClicked(x, y) {
-  // Add the position and dimensions of your mute button here
-  let muteButtonX = 10;
-  let muteButtonY = 10;
-  let muteButtonWidth = 50;
-  let muteButtonHeight = 50;
-
-  return x >= muteButtonX && x <= muteButtonX + muteButtonWidth && y >= muteButtonY && y <= muteButtonY + muteButtonHeight;
-}
-
-
-const scales = {
-  Major:            [0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23],
-  Natural_Minor:    [0, 2, 3, 5, 7, 8, 10, 12, 14, 15, 17, 19, 20, 22],
-  Harmonic_Minor:   [0, 2, 3, 5, 7, 8, 11, 12, 14, 15, 17, 19, 20, 23],
-  Melodic_Minor:    [0, 2, 3, 5, 7, 9, 11, 12, 14, 15, 17, 19, 21, 23],
-  Mixolydian:       [0, 2, 4, 5, 7, 9, 10, 12, 14, 16, 17, 19, 21, 22],
-  Phrygian:         [0, 1, 3, 5, 7, 8, 10, 12, 13, 15, 17, 19, 20, 22],
-  Lydian:           [0, 2, 4, 6, 7, 9, 11, 12, 14, 16, 18, 19, 21, 23],
-  Locrian:          [0, 1, 3, 5, 6, 8, 10, 12, 13, 15, 17, 18, 20, 22],
-  Mongolian:        [0, 2, 5, 7, 9, 12, 14, 17, 19, 21, 24, 26, 29, 31],
-  Pentatonic_Major: [0, 2, 4, 7, 9, 12, 14, 16, 19, 21, 24, 26, 28, 31],
-  Pentatonic_Minor: [0, 3, 5, 7, 10, 12, 15, 17, 19, 22, 24, 27, 29, 31],
-  Overtone:         [0, 4, 7, 10, 12, 14, 16, 19, 22, 24, 26, 28, 31, 34, 36, 38, 40, 43, 46, 48, 50],
-  Blues:            [0, 3, 5, 6, 7, 10, 12, 15, 17, 18, 19, 22, 24, 27],
-  Chromatic:        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
-  Whole_Tone:       [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30],
-};
 
 // An array of 11 colors to choose from
-let colors = ["#ff0000", "#ff7f00", "#ffff00", "#00ff00", "#0000ff", "#4b0082", "#9400d3", "#ff00ff", "#00ffff", "#008000", "#800000"];
-
-
-// WhiteDot class
-class WhiteDot {
-  constructor(x, y) {
-    // Position attributes
-    this.x = x;
-    this.y = y;
-    // this.radius = radius;
-    // this.beat = beat;
-
-    // Original size and size storage
-    this.size = random(10, 30);
-    this.originalSize = this.size;
-
-    // Animation
-    this.animationDuration = 200;
-    this.animationStartTime = null;
-
-
-    // Movement
-    this.speed = random(0.2, settings.speed);
-    this.angle = random(TWO_PI);
-
-    // Note
-    this.playedNote = false;
-    this.isPlaying = false;
-    this.scale = scales[settings.scale];
-    this.noteIndex = int(random(this.scale.length));
-    this.midiNote = root + this.scale[this.noteIndex];
-    this.scaleNote = Tone.Frequency(this.midiNote, 'midi');
-
-    // Rhythm
-    this.beatsToPlay = new Array(8).fill(false);
-
-    this.creationTime = Tone.Transport.seconds;
-
-
-    const now = Tone.now()
-
-    // Play created note
-    polySynth.triggerAttackRelease(this.scaleNote, "0.5n");
-    this.calculateTriggerTime(octaveGenerators); // Add this line to set triggerTime
-
-  }
-
-  // update function to change position of white dot
-  update() {
-    if (!settings.lockNodes) {
-      this.x += this.speed * cos(this.angle);
-      this.y += this.speed * sin(this.angle);
-
-  // Wrap the position of the dot around the screen
-  if (this.x < 0) {
-    this.x = width;
-  } else if (this.x > width) {
-    this.x = 0;
-  }
-
-  if (this.y < 0) {
-    this.y = height;
-  } else if (this.y > height) {
-    this.y = 0;
-  }
-}
-  }
-
-  // Mouse over for interacting
-  isMouseOver() {
-    const distanceToMouse = dist(this.x, this.y, mouseX, mouseY);
-    return distanceToMouse < this.size / 2;
-  }
-
-  calculateTriggerTime(octaveGenerators) {
-    if (!settings.showOctaveGenerator || octaveGenerators.length === 0) return;
-    let minDistance = Infinity;
-    for (const generator of octaveGenerators) {
-      const distance = dist(this.x, this.y, generator.x, generator.y);
-      minDistance = min(minDistance, distance);
-    }
-    const maxDistance = dist(0, 0, width, height);
-    const normalizedDistance = minDistance / maxDistance;
-    this.triggerTime = Tone.Time("1n").toSeconds() * normalizedDistance;
-  }
-
-
-
-  // display function to draw the white dot
-  display() {
-    // Get the color index based on the note index
-    let colorIndex = this.noteIndex % colors.length;
-    fill(colors[colorIndex]);
-
-    // Size animation when note played
-    let displaySize = this.size;
-    if (this.isPlaying) {
-      if (this.animationStartTime === null) {
-        this.animationStartTime = millis();
-      }
-      const elapsedTime = millis() - this.animationStartTime;
-      if (elapsedTime < this.animationDuration) {
-        displaySize *= 1.2;
-      } else {
-        displaySize = this.originalSize;
-        this.isPlaying = false;
-        this.animationStartTime = null;
-      }
-    } else {
-      displaySize = this.originalSize;
-    }
-
-    noStroke();
-    ellipse(this.x, this.y, displaySize);
-  }
-
-  // Call this method when the sound is played
-  soundPlayed() {
-    this.isPlaying = true;
-    this.animationStartTime = millis();
-  }
-
-
-
-  // check distance between generators and dots and draw lines if they're close
-  checkDistance(generators, distanceThreshold, lineColor) {
-    for (let generator of generators) {
-      let distance = dist(this.x, this.y, generator.x, generator.y);
-      if (distance < distanceThreshold) {
-        push(); // Save the current drawing state
-
-        stroke(lineColor);
-        // Map distance to stroke weight: maximum weight at 0 distance, minimum weight at the distanceThreshold
-        let weight = map(distance, 0, distanceThreshold, 4, 0.5);
-        strokeWeight(weight);
-        line(this.x, this.y, generator.x, generator.y);
-        pop(); // Restore the previous drawing state
-
-      }
-    }
-  }
-}
-// end of WhiteDot
-
-class OctaveGenerator {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-
-    
-    this.size = 30;
-    this.range = 200;
-    this.color = 'orange';
-    this.rings = 8;
-    this.ringColor = 200;
-    
-    this.startingRingSize = 0;
-    this.endingRingSize = this.range; 
-
-    this.whiteDots = [];
-    this.ringWidth = this.range / this.rings;
-    
-
-      }
-
-  labelWhiteDots() {
-    for (const whiteDot of this.whiteDots) {
-      const distance = dist(this.x, this.y, whiteDot.x, whiteDot.y);
-      const ringIndex = Math.floor(distance / this.ringWidth);
-      if (ringIndex >= 0 && ringIndex < 8) {
-        whiteDot.beatsToPlay[ringIndex] = true;
-      }
-    }
-  }
-
-  
-  // Add a method to check if a WhiteDot is within the range
-  isWhiteDotInRange(whiteDot) {
-    const distance = dist(this.x, this.y, whiteDot.x, whiteDot.y);
-    return distance <= this.range;
-  }
-  
-  updateWhiteDotsInRange(whiteDots) {
-    // Clear the current whiteDots array
-    this.whiteDots = [];
-    // Iterate through the input whiteDots array
-    for (const whiteDot of whiteDots) {
-      // Check if the whiteDot is within the range of the generator
-      if (this.isWhiteDotInRange(whiteDot)) {
-        // Add the whiteDot to the generator's whiteDots array
-        this.whiteDots.push(whiteDot);
-      }
-    }
-  }
-
-  drawRings(currentEighthNote) {
-    for (let i = 1; i <= this.rings; i++) {
-    const opacity = (i === currentEighthNote+1) ? 255 : 10; // Set opacity to 255 if it's the current beat, otherwise set it to 50
-    
-    stroke(this.ringColor, opacity);
-    noFill();
-    let ringRadius = i * (this.range/this.rings); // Adjust this value to set the distance between rings
-    ellipse(this.x, this.y, ringRadius * 2, ringRadius * 2);
-    }
-  }
-  
-
-  // Update the display method to draw the range circle
-  display() {
-    // currentEighthNote = getEigthNoteIndex(currentPosition)
-
-    this.drawRings(currentEighthNote);
-    fill(this.color);
-    ellipse(this.x, this.y, this.size);
-    noFill();
-    ellipse(this.x, this.y, this.range * 2);
-  }
-}
-
-let beatSize = 30;
-
-// toggleMute function 
-let isMuted = false;
-
-function toggleMute() {
-  if (isMuted) {
-    // unmute the audio
-    Tone.Master.mute = false;
-    isMuted = false;
-  } else {
-    // mute the audio
-    Tone.Master.mute = true;
-    isMuted = true;
-  }
-}
-
+let colors = ["#ff00ff", "#00ffea", "#5effff", "#FF9A8C", "#94FBAB", "#FD7E14", "#2D3748", "#FFC2E7", "#0092FF"];
 
 function drawMetronome() {
   let currentPosition = Tone.Transport.position.split(":");
   let currentBeat = parseInt(currentPosition[1]);
-  beatNum = currentBeat; // Add this line to update the beatNum
-  
+  beatNum = currentBeat;
+
   let metronomeSize = 50;
-  if (beatNum === 0) {
-    fill(255, 0, 0); // red color for the first beat
-  } else {
-    if (beatNum === 1) {
-      fill(200, 0, 0); // red color for the first beat
-    } else {
-      if (beatNum === 2) {
-        fill(150, 0, 0); // red color for the first beat
-      } else {
-        fill(100, 0, 0); // white color for the other beats
-      }
-    }
+  switch (beatNum) {
+    case 0:
+      fill(255, 0, 0); //red color for the first beat
+      break;
+    case 1:
+      fill(202, 0, 0);
+      break;
+    case 2:
+      fill(155, 0, 0);
+      break;
+    default:
+      fill(102, 0, 0);
   }
 
   ellipse(width / 2, height / 2, metronomeSize);
-}
-
-// GUI SETTINGS
-
-// Default settings
-const settings = {
-  scale: "Mongolian",
-  speed: 1,
-  lockNodes: true
-
-};
-
-function updateNodeSpeeds() {
-  for (let whiteDot of whiteDots) {
-    whiteDot.speed = random(0.5, settings.speed);
-  }
-}
-
-
-function setupGui() {
-  const gui = new dat.GUI({ autoPlace: false });
-  gui.domElement.id = 'gui-container';
-  document.body.appendChild(gui.domElement);
-
-  const params = {
-    bpm: Tone.Transport.bpm.value,
-  };
-
-
-  // BPM
-  gui.add(params, 'bpm', 10, 240).step(1).name('BPM').onChange((value) => {
-    Tone.Transport.bpm.value = value;
-  });
-
-  // Scale option
-  gui.add(settings, "scale", Object.keys(scales)).name("Scale");
-
-  // Node speed
-  const speedController = gui.add(settings, "speed", 0.01, 2).step(0.01).name("Node Speed");
-  speedController.onChange(updateNodeSpeeds);
-
-  // Freeze nodes
-  gui.add(settings, "lockNodes").name("Freeze Nodes");
-
-
-}
-
-function setupToolbar() {
-  interactionMode = "create";
-  // Add event listeners to the toolbar buttons
-  const whiteDotButton = document.getElementById("create-button");
-  whiteDotButton.addEventListener("click", () => {
-    interactionMode = "create";
-    whiteDotButton.classList.add("active"); // Add the "active" class to the button
-    thereminButton.classList.remove("active"); // Remove the "active" class from the other button
-  });
-
-  const thereminButton = document.getElementById("theremin-button");
-  thereminButton.addEventListener("click", () => {
-    interactionMode = "theremin";
-    thereminButton.classList.add("active"); // Add the "active" class to the button
-    whiteDotButton.classList.remove("active"); // Remove the "active" class from the other button
-  });
-
-  // Set the initial active button to be the white dot button
-  whiteDotButton.classList.add("active");
 }
