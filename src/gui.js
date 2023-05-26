@@ -48,17 +48,18 @@ function handleOctaveOffsetToolbarClick() {
       mouseY <= circleY + circleSize / 2
     ) {
       settings.octaveOffset = octaveOffsets[i];
-      break;
+      return true; // Toolbar was clicked, return true
     }
   }
+  return false; // Toolbar was not clicked, return false
 }
 
 
 function drawScaleToolbar() {
   const regionWidth = width / numRegions;
-  const toolbarY = height-100;
-  
-  
+  const toolbarY = height - 100;
+
+
   for (let i = 0; i < scales[settings.scale].length; i++) {
     const circleX = (regionWidth * i) + (regionWidth / 2); // Center the circle within the region
     const circleY = toolbarY;
@@ -68,19 +69,18 @@ function drawScaleToolbar() {
     } else {
       fill(255);
     }
-    
+
     ellipse(circleX, circleY, circleSize);
   }
 }
+let toolbarClicked = false;
 
 function handleToolbarClick() {
-
   const regionWidth = width / numRegions;
-  const toolbarY = height-100;
-
+  const toolbarY = height - 100;
 
   for (let i = 0; i < scales[settings.scale].length; i++) {
-    const circleX = (regionWidth * i) + (regionWidth / 2); // Center the circle within the region
+    const circleX = (regionWidth * i) + (regionWidth / 2); 
     const circleY = toolbarY;
 
     if (
@@ -90,11 +90,11 @@ function handleToolbarClick() {
       mouseY <= circleY + circleSize / 2
     ) {
       selectedNoteIndex = i;
-      break;
+      return true; // Toolbar was clicked, return true
     }
   }
+  return false; // Toolbar was not clicked, return false
 }
-
 
 
 
@@ -102,9 +102,11 @@ function handleToolbarClick() {
 
 function updateNodeSpeeds() {
   for (let whiteDot of whiteDots) {
-    whiteDot.speed = random(0.5, settings.speed);
+    whiteDot.speed = random(settings.speed-1, settings.speed);
   }
 }
+
+
 
 
 function setupGui() {
@@ -112,8 +114,12 @@ function setupGui() {
   gui.domElement.id = 'gui-container';
   document.body.appendChild(gui.domElement);
 
+
+
   const params = {
     bpm: Tone.Transport.bpm.value,
+    volume: 50
+
   };
 
 
@@ -122,13 +128,34 @@ function setupGui() {
     Tone.Transport.bpm.value = value;
   });
 
+  // Volume
+  // gui.add(params, 'volume', 0, 100).step(1).name('Volume increase').onChange((value) => {
+    // Tone.Destination.volume.value = value / 10;
+  // });
+
   // Scale option
   gui.add(settings, "scale", Object.keys(scales)).name("Scale").onChange(() => {
+    if (settings.scale === "Random") {
+      scales.Random = getRandomIntervals();
+    }
+    // Update the current scale
+    currentScale = scales[settings.scale];
     updateWhiteDotsScale();
+
+    // Recalculate the notes in the scale and the number of regions
+    scaleNotes = currentScale.map(interval => {
+      let frequency = rootFrequency * Math.pow(2, interval / 12);
+      return Tone.Frequency(frequency).toNote();
+    });
+
+    numRegions = scaleNotes.length;
+
+    // Reset the selected note index
+    selectedNoteIndex = 0;
   });
 
   // Node speed
-  const speedController = gui.add(settings, "speed", 0.01, 2).step(0.01).name("Node Speed");
+  const speedController = gui.add(settings, "speed", 0.01, 5).step(0.01).name("Node Speed");
   speedController.onChange(updateNodeSpeeds);
 
   // Freeze nodes
@@ -137,38 +164,41 @@ function setupGui() {
 
 }
 
+
 function setupToolbar() {
   interactionMode = "create";
 
   let isMuted = false;
 
   const muteButton = document.getElementById("mute-button");
-  muteButton.addEventListener("click", () => {
+  muteButton.addEventListener("click", (event) => {
+    event.stopPropagation(); // prevent event from reaching the canvas
     isMuted = !isMuted; // Toggle the mute state
 
     if (isMuted) {
-      muteButton.classList.add("active"); 
+      muteButton.classList.add("active");
       Tone.Destination.mute = true;
     } else {
-      muteButton.classList.remove("active"); 
+      muteButton.classList.remove("active");
       Tone.Destination.mute = false;
-    }});
-  // Add event listeners to the toolbar buttons
+    }
+  });
   const whiteDotButton = document.getElementById("create-button");
-  whiteDotButton.addEventListener("click", () => {
+  whiteDotButton.addEventListener("click", (event) => {
+    event.stopPropagation();
     interactionMode = "create";
-    whiteDotButton.classList.add("active"); // Add the "active" class to the button
-    thereminButton.classList.remove("active"); // Remove the "active" class from the other button
+    whiteDotButton.classList.add("active"); 
+    thereminButton.classList.remove("active"); 
   });
 
   const thereminButton = document.getElementById("theremin-button");
-  thereminButton.addEventListener("click", () => {
+  thereminButton.addEventListener("click", (event) => {
+    event.stopPropagation();
     interactionMode = "theremin";
-    thereminButton.classList.add("active"); // Add the "active" class to the button
-    whiteDotButton.classList.remove("active"); // Remove the "active" class from the other button
+    thereminButton.classList.add("active"); 
+    whiteDotButton.classList.remove("active"); 
   });
 
-  // Set the initial active button to be the white dot button
   whiteDotButton.classList.add("active");
 }
 

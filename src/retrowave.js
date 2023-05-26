@@ -10,6 +10,7 @@ let spacing = 50;
 // Angle to create perspective higher -> more in the ground
 let flattenPerspective = 60;
 
+// Animation speed
 let backgroundSpeed = 0.1;
 
 function setupBackground() {
@@ -39,7 +40,7 @@ function createGradient() {
 function drawBackground() {
   const vanishingPoint = height/2;
   let horizon=vanishingPoint;
-  background(32, 13, 58);
+  background(32, 13, 58,50);
   horizon=vanishingPoint+spaceMargin;
 
   // Draw vertical lines in perspective

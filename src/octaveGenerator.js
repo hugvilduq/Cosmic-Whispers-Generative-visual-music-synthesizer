@@ -5,11 +5,13 @@ class OctaveGenerator {
       this.octaveOffset = octaveOffset;
   
       
-      this.size = 30;
+      this.size = 60;
       this.range = 200;
       this.color = 'orange';
       this.rings = 8;
       this.ringColor = 200;
+
+
   
       
       this.startingRingSize = 0;
@@ -37,6 +39,12 @@ class OctaveGenerator {
         }
       }
     }
+
+      // Setter method for the range
+  setRange(value) {
+    this.range = value;
+    this.ringWidth = this.range / this.rings;  // If you want the ringWidth to update when range changes
+  }
   
     
     // Add a method to check if a WhiteDot is within the range
@@ -46,13 +54,9 @@ class OctaveGenerator {
     }
     
     updateWhiteDotsInRange(whiteDots) {
-      // Clear the current whiteDots array
       this.whiteDots = [];
-      // Iterate through the input whiteDots array
       for (const whiteDot of whiteDots) {
-        // Check if the whiteDot is within the range of the generator
         if (this.isWhiteDotInRange(whiteDot)) {
-          // Add the whiteDot to the generator's whiteDots array
           this.whiteDots.push(whiteDot);
         }
       }
@@ -70,11 +74,7 @@ class OctaveGenerator {
     }
     
   
-    // Update the display method to draw the range circle
     display() {
-      // currentEighthNote = getEigthNoteIndex(currentPosition)
-      // image(this.texture, this.x - this.size / 2, this.y - this.size / 2);
-  
       this.drawRings(currentEighthNote);
       fill(this.color);
       ellipse(this.x, this.y, this.size);

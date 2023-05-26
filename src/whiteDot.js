@@ -7,28 +7,33 @@ class WhiteDot {
       this.y = y;
   
       // Original size and size storage
-      this.size = random(10, 30);
+      this.size = random(30, 50);
       this.originalSize = this.size;
   
       // Animation
       this.animationDuration = 200;
       this.animationStartTime = null;
-  
-  
-      // Movement
-      this.speed = random(0.2, settings.speed);
-      this.angle = random(TWO_PI);
-  
-      // Note
-      this.playedNote = false;
-      this.isPlaying = false;
-      this.scale = scales[settings.scale];
-      this.noteIndex = noteIndex;
-      this.midiNote = root + this.scale[this.noteIndex];
-      this.scaleNote = Tone.Frequency(this.midiNote, 'midi');
-  
-      // Rhythm
-      this.beatsToPlay = new Array(8).fill(false);
+      
+          
+          // Movement
+          this.speed = random(0.2, settings.speed);
+          this.angle = random(TWO_PI);
+          
+          // Note
+          this.playedNote = false;
+          this.isPlaying = false;
+          this.scale = scales[settings.scale];
+          this.noteIndex = noteIndex;
+          this.midiNote = root + this.scale[this.noteIndex];
+          this.scaleNote = Tone.Frequency(this.midiNote, 'midi');
+          
+          // Color
+          this.originalColor = colors[this.noteIndex % colors.length];
+          this.brightColor = "#99ffe4";
+          this.currentColor = this.originalColor;
+          
+          // Rhythm
+          this.beatsToPlay = new Array(8).fill(false);
   
       this.creationTime = Tone.Transport.seconds;
   
@@ -90,9 +95,7 @@ class WhiteDot {
   
     // display function to draw the white dot
     display() {
-      // Get the color index based on the note index
-      let colorIndex = this.noteIndex % colors.length;
-      fill(colors[colorIndex]);
+      fill(this.originalColor);
   
       // Size animation when note played
       let displaySize = this.size;
@@ -103,15 +106,26 @@ class WhiteDot {
         const elapsedTime = millis() - this.animationStartTime;
         if (elapsedTime < this.animationDuration) {
           displaySize *= 1.2;
+
+        this.currentColor =this.brightColor;
+        fill(this.currentColor);
+      } else {
+        displaySize = this.originalSize;
+        this.isPlaying = false;
+        this.animationStartTime = null;
+
+        // Reset the color
+        this.currentColor = this.originalColor;
+      }
         } else {
           displaySize = this.originalSize;
           this.isPlaying = false;
           this.animationStartTime = null;
         }
-      } else {
-        displaySize = this.originalSize;
-      }
-  
+      
+
+        fill(this.currentColor);
+
       noStroke();
       ellipse(this.x, this.y, displaySize);
     }
@@ -142,7 +156,6 @@ class WhiteDot {
       }
     }
   }
-  // end of WhiteDot
   
   
   function updateWhiteDotsScale() {
