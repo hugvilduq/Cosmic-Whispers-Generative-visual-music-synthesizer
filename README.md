@@ -1,4 +1,4 @@
-# Cosmic-Whispers
+# Cosmic Whispers
 A visual synthesizer inspired by the cosmos, using p5 and Tone.js
 
 To use:
