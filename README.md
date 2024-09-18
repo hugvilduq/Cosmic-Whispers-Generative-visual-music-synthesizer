@@ -24,11 +24,11 @@ Cosmic Whispers is a creative programming platform that merges graphic animation
 This project combines art and technology to provide users with a creative playground that emphasizes the relationship between movement on the canvas and sound. Through simple interactions and parameter adjustments, users can generate soundscapes influenced by the behavior of graphical objects on the screen.
 
 ## Features
-Interactive Visual Synthesizer: Create generators and notes by clicking on the canvas, which correspond to different tones.
-Random Music Generation: Leverage intuitive algorithms to generate random and evolving musical patterns.
-Customizable Parameters: Fine-tune musical parameters using a user-friendly dat.gui interface.
-Real-time Sound and Animation: See how your adjustments affect the behavior of on-screen elements and the synthesized sound in real time.
-Visual Aesthetic Inspired by the Cosmos: Enjoy a beautifully designed interface with cosmic-inspired visual elements, creating an immersive and meditative experience.
+- Interactive Visual Synthesizer: Create generators and notes by clicking on the canvas, which correspond to different tones.
+- Random Music Generation: Leverage intuitive algorithms to generate random and evolving musical patterns.
+- Customizable Parameters: Fine-tune musical parameters using a user-friendly dat.gui interface.
+- Real-time Sound and Animation: See how your adjustments affect the behavior of on-screen elements and the synthesized sound in real time.
+- Visual Aesthetic Inspired by the Cosmos: Enjoy a beautifully designed interface with cosmic-inspired visual elements, creating an immersive and meditative experience.
 
 ## Getting Started
 To get started with Cosmic Whispers, you can either visit the live demo or clone this repository to run it locally on your machine.
