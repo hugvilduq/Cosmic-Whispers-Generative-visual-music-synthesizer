@@ -71,12 +71,13 @@ Looking forward, Cosmic Whispers could be expanded in several directions to prov
 I'm openly accepting pull requests - Feel free to be creative!
 
 ### Credits
-Author: Hugo Villanueva – LinkedIn | GitHub
-Thesis Supervisor: Professor Name – Universidad de Sevilla
+Author: Hugo Villanueva – [LinkedIn](https://www.linkedin.com/in/hugo-villanueva-it/) | [GitHub](https://github.com/hugvilduq)
+
+Thesis Supervisor: Víctor Jesús Diaz Madrigal – Universidad de Sevilla
 Libraries Used:
-- p5.js
-- Tone.js
-- dat.GUI
+- [p5.js](https://p5js.org/)
+- [Tone.js](https://tonejs.github.io/)
+- [dat.GUI](https://github.com/dataarts/dat.gui)
 
 
 
