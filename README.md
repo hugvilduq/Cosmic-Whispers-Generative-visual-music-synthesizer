@@ -44,8 +44,7 @@ Cosmic Whispers allows you to generate music based on visual interaction. Follow
 - Shift + Click: Create music generators on the canvas, which are visual nodes that move and interact with each other, producing sound based on their position and behavior.
 - Click: Place notes on the canvas by selecting a note from the row below and clicking in the desired position.
 - Parameter Adjustments: Use the dat.gui interface on the top-left to control the behavior of the nodes, adjust pitch, and modify sound parameters.
-- Sound Design
-Open the Sound Design Panel located at the bottom-right corner to modify the sound settings.
+- Sound Design: Open the Sound Design Panel located at the bottom-right corner to modify the sound settings.
 Use sliders to adjust the Attack, Decay, Sustain, and Release (ADSR) envelope settings for each synth.
 Experiment with different waveforms (sine, square, triangle) and oscillator types to create different tonal textures.
 
@@ -74,6 +73,7 @@ I'm openly accepting pull requests - Feel free to be creative!
 Author: Hugo Villanueva – [LinkedIn](https://www.linkedin.com/in/hugo-villanueva-it/) | [GitHub](https://github.com/hugvilduq)
 
 Thesis Supervisor: Víctor Jesús Diaz Madrigal – Universidad de Sevilla
+
 Libraries Used:
 - [p5.js](https://p5js.org/)
 - [Tone.js](https://tonejs.github.io/)
