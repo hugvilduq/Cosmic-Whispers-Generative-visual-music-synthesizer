@@ -6,9 +6,10 @@ Cosmic Whispers allows to generate music automatically and randomly, based on in
 thanks to the dat.gui library. All this, in addition to a pleasant and artistic aesthetic design to exploit the capabilities of the libraries.
 
 # Instructions: 
-Shift+click to create generators on canvas. 
-Select a note from the row below. Click to create Notes on canvas. 
-Adjust parameters as desired on the menu on the top left for node control, or open the Sound Design panel on the bottom right.
+* Shift+click to create generators on canvas. 
+* Select a note from the row below.
+* Click to create Notes on canvas.
+* Adjust parameters as desired on the menu on the top left for node control, or open the Sound Design panel on the bottom right.
 
 https://cosmicwhispers.000webhostapp.com/
 
