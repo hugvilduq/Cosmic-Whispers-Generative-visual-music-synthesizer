@@ -1,7 +1,7 @@
 # Cosmic Whispers
 Cosmic Whispers is a visual synthesizer inspired by the beauty and mystery of the cosmos. It is built using p5.js and Tone.js to provide users with an immersive, interactive experience where visual animations combine with musical synthesis to create a unique musical sandbox.
 
-This project is part of a Bachelor's Thesis in Computer Science, focusing on creative programming and the intersection between visual art and sound synthesis. The main objective is to inspire musicians, artists, and sound enthusiasts to explore new possibilities, create innovative musical patterns, and enjoy the harmony between visuals and sound.
+This project is part of a Bachelor's Thesis in Computer Science, focusing on creative programming and the intersection between visual art and sound synthesis. The main objective is to inspire musicians, artists, and sound enthusiasts to explore new possibilities, create innovative musical patterns and enjoy the harmony between visuals and sound.
 
 Visit the live version here: [Cosmic Whispers](https://cosmicwhispers.000webhostapp.com/)
 
