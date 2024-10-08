@@ -11,7 +11,7 @@ Demo available: [Cosmic Whispers](https://youtu.be/mMwEvSCUG-k)
 - Getting Started
 - Usage
 - User Interactions
-- Sound Design
+- Sound Design 
 - Installation
 - Technologies Used
 - Future Implementations
