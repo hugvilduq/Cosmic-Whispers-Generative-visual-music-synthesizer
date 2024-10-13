@@ -6,7 +6,7 @@ This project is part of a Bachelor's Thesis in Computer Science, focusing on cre
 Demo available: [Cosmic Whispers](https://youtu.be/mMwEvSCUG-k)
 
 ## Table of Contents
-- Introduction
+- Introduction 
 - Features
 - Getting Started
 - Usage
